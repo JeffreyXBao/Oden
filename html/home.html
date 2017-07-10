@@ -13,8 +13,21 @@
 
   <div class="just-padding">
     <div class="list-group list-group-root well">
-      <a href="#" class="list-group-item" ng-repeat="category in categories track by $index">{{category.name}}
-      </a>
+      <div ng-repeat="category in categories track by $index">
+        <a href="#" class="list-group-item">{{category.name}}</a>
+        <div class="list-group">
+          <div ng-repeat="sub in category.subs track by $index">
+            <a href="#" class="list-group-item" style="padding-left:30px">{{sub.name}}</a>
+            <div class="list-group">
+              <a href="#" class="list-group-item" ng-repeat="item in sub.articles track by $index" style="padding-left:45px">{{item.name}}</a>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="just-padding">
+    <div class="list-group list-group-root well">
       <a href="#" class="list-group-item">Item 1</a>
       <div class="list-group">
 

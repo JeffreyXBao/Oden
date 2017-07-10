@@ -28,26 +28,6 @@ app.controller('homeCtrl', function($scope) {
   $scope.categories = fileHandler.parseJson('./json/category.json').categories;
 });
 
-app.directive('homeTable', function() {
-  return {
-    restrict: 'E',
-    link: function (scope, element, attrs) {
-      var html = '<div class="list-group list-group-root well">';
-      angular.forEach(scope[attrs.categories], function (cat, index){
-        html += '<a href="#" class="list-group-item">' + cat.name + '</a>';
-        if (subs in cat) {
-          html += '<div class="list-group">';
-          angular.forEach(cat.subs, function (subcat, index) {
-            html += '<a href="#" class="list-group-item">' + subcat.name + '</a>';
-          });
-          html += '</div>';
-        }
-      });
-      html += '</div>';
-      element.replaceWith(html);
-    }
-  }
-});
 app.controller('rssConfigCtrl', function($scope) {
   $scope.vmRss = null;
 
