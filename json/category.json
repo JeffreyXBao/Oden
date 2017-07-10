@@ -1,0 +1,30 @@
+{
+   "categories":[
+      {
+         "name":"Domestic",
+         "subs":[
+           {
+              "name":"Trump",
+              "keywords":[
+                 "Trump",
+                 "President",
+                 "White House"
+              ]
+           }
+         ]
+      },
+      {
+         "name":"test2",
+         "subs":[
+           {
+              "name":"Trump",
+              "keywords":[
+                 "Trump",
+                 "President",
+                 "White House"
+              ]
+           }
+         ]
+      }
+   ]
+}

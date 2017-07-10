@@ -1,0 +1,65 @@
+// for (let r = 0; r < objRss.length; r++) {
+//   let httpRequestRss = new XMLHttpRequest();
+//   httpRequestRss.open('GET', objRss[r], false);
+//   httpRequestRss.send(null);
+//
+//   if (httpRequestRss.status === 200) {
+//     let rssXml = httpRequestRss.responseText;
+//     let parsedRss = xmlParser.parseFromString(rssXml, "application/xml");
+//
+//     for (let i = 0; i < parsedRss.getElementsByTagName('item').length; i++) {
+//       console.log(parsedRss.getElementsByTagName('item')[i].getElementsByTagName('title')[0].innerHTML);
+//
+//       let httpRequestArticle = new XMLHttpRequest();
+//       let link = parsedRss.getElementsByTagName('item')[i].getElementsByTagName('link')[0].innerHTML;
+//
+//       httpRequestArticle.open('GET', link, false);
+//
+//       try {
+//         httpRequestArticle.send(null);
+//       } catch (err) {
+//         console.log("Error loading " + link);
+//       }
+//
+//       let hasArticleBeenSaved = false;
+//
+//       if (httpRequestArticle.status === 200) {
+//         let articleHtml = httpRequestArticle.responseText;
+//         let parsedHtml = xmlParser.parseFromString(articleHtml, "text/html")
+//
+//         let paragraphs = parsedHtml.getElementsByTagName('p');
+//
+//         for (let c = 0; c < objCategory.categories.length; c++) {
+//           //console.log(objCategory.categories[c].name);
+//           for (let s = 0; s < objCategory.categories[c].subs.length; s++) {
+//             //console.log(objCategory.categories[c].subs[s].name);
+//             let keyWordCount = 0;
+//             for (let k = 0; k < objCategory.categories[c].subs[s].keywords.length; k++) {
+//               //console.log(objCategory.categories[c].subs[s].keywords[k]);
+//               let keyword = new RegExp(objCategory.categories[c].subs[s].keywords[k], 'gi');
+//               for (let p = 0; p < paragraphs.length; p++) {
+//                 let matches = paragraphs[p].innerHTML.match(keyword);
+//                 if (matches !== null && matches !== undefined && matches !== []) {
+//                   keyWordCount += matches.length;
+//                 }
+//               }
+//             }
+//             if (keyWordCount > 5) {
+//               if (!hasArticleBeenSaved) {
+//                 fileHandler.saveArticle(link);
+//                 hasArticleBeenSaved = true;
+//               }
+//               fileHandler.appendDirectory("", "", ""); //todo: insert parameters
+//             }
+//
+//             console.log(keyWordCount);
+//           }
+//         }
+//       } else {
+//         console.log("Could not load article. Skipping to next one.")
+//       }
+//     }
+//   } else {
+//     alert("Error occured: Oden could not access RSS source. Is the URL blocked by your DNS or ISP?")
+//   }
+// };

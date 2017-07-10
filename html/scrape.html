@@ -1,0 +1,18 @@
+<div ng-controller="scrapeCtrl">
+  <div class="container text-center">
+    <div class="jumbotron">
+      <h1 class="display-3">Scraper</h1>
+      <p class="lead">Here, Oden will crawl the web for articles and save them (requires internet).</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <button type="button" class="btn btn-primary btn-block" id="btnAdd" ng-click="handleScrapeClick()"><b>Initialize Scrape</b></button>
+        <img src="./img/loader.gif">
+        <div>
+          <textarea readonly rows="4" class="col-md-12" ng-model="scrapeInfo" style="resize: none;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

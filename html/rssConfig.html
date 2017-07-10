@@ -1,0 +1,34 @@
+<div ng-controller="rssConfigCtrl">
+  <div class="container text-center">
+      <div class="jumbotron">
+          <h1 class="display-3">RSS Configuration</h1>
+          <p class="lead">Here, you can set locations that Oden will search for articles.</p>
+      </div>
+
+      <div class="row">
+          <div class="col-sm-12">
+            <p>RSS sources:</p>
+            <ul class="list-group" style="line-height:30px">
+              <li  class="list-group-item" ng-show="checkResponse()">
+                You don't have any RSS sources added.
+              </li>
+              <li ng-repeat="link in response track by $index" class="list-group-item">
+                {{link}}
+                <span class="pull-right button-group">
+                  <button type="button" class="btn btn-danger" ng-click="delete($index)"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+                </span>
+              </li>
+            </ul>
+            <!--<p id="rssList"></p><br>-->
+            <h4>list RSS sources to add and separate with commas and <b>NO SPACES</b></h4>
+            <form class="navbar-form navbar-left" nosubmit="">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="input" id="txtRss" ng-model="vmRss">
+              </div>
+              <button type="button" class="btn btn-primary" id="btnAdd" ng-click="handleAddDivClick()">Add</button>
+            </form>
+            <br>
+          </div>
+      </div>
+  </div>
+</div>
