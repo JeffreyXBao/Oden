@@ -1,14 +1,17 @@
 var fs = require('fs');
 var scrape = require('website-scraper');
 var exports = module.exports = {};
+const remote = require('electron').remote;
+const app = remote.app;
+const appPath = app.getAppPath();
 
 exports.parseJson = function(path) {
-  var data = fs.readFileSync(path, 'utf-8');
+  var data = fs.readFileSync(`${appPath}/${path}`, 'utf-8');
   return JSON.parse(data);
 };
 
 exports.parseJsonAsync = function(path, callback) {
-  fs.readFile(path, 'utf-8', (err, data) => {
+  fs.readFile(`${appPath}/${path}`, 'utf-8', (err, data) => {
     if (err) throw err;
     callback(JSON.parse(data));
   });
@@ -16,7 +19,7 @@ exports.parseJsonAsync = function(path, callback) {
 
 exports.parseJsonPromise = function(path) {
   return new Promise(function(resolve, reject) {
-    fs.readFile(path, 'utf-8', (err, data) => {
+    fs.readFile(`${appPath}/${path}`, 'utf-8', (err, data) => {
       if (err) return reject(err);
       resolve(JSON.parse(data));
     });
@@ -53,8 +56,8 @@ exports.categorizeArticles = function(queueArray) {
   console.log(queueArray);
 
   let jsonPromises = [];
-  jsonPromises.push(fileHandler.parseJsonPromise('./json/directory.json'));
-  jsonPromises.push(fileHandler.parseJsonPromise('./json/category.json'));
+  jsonPromises.push(fileHandler.parseJsonPromise('json/directory.json'));
+  jsonPromises.push(fileHandler.parseJsonPromise('json/category.json'));
 
   Promise.all(jsonPromises).then(returnValues => {
     saveLoop(returnValues[0], returnValues[1]);
@@ -140,8 +143,8 @@ exports.categorizeArticles = function(queueArray) {
         console.log("category array didn't match subcategory array, skipping");
       }
     }
-    fs.writeFileSync('./json/directory.json', JSON.stringify(directory));
-    fs.writeFileSync('./json/category.json', JSON.stringify(categoryObj));
+    fs.writeFileSync(`${appPath}/json/directory.json`, JSON.stringify(directory));
+    fs.writeFileSync(`${appPath}/json/category.json`, JSON.stringify(categoryObj));
   }
 
   function categoryItemObjectGenerator(name, pubDate, path) {
@@ -166,7 +169,7 @@ exports.categorizeArticles = function(queueArray) {
   async function saveArticle(link, saveName) {
     var options = {
       urls: [link],
-      directory: './articles/' + saveName + '/',
+      directory: `${appPath}/articles/${saveName}/`,
     };
 
     scrape(options).then(result => {

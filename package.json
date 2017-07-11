@@ -4,16 +4,24 @@
   "description": "News utility",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js"
+    "start": "electron .",
+    "pack": "build --dir"
   },
-  "author": "",
+  "build": {
+    "appId": "com.antwang.oden.odenrelease",
+    "productName": "Oden"
+  },
+  "repository": "https://github.com/antwang2/oden",
+  "author": "antwang",
   "license": "ISC",
   "dependencies": {
     "angular": "^1.6.4",
     "angular-route": "^1.6.4",
     "bootstrap": "^3.3.7",
-    "electron": "^1.6.10",
     "jquery": "^3.2.1",
     "website-scraper": "^3.0.0"
+  },
+  "devDependencies": {
+    "electron": "^1.6.10"
   }
 }

@@ -1,5 +1,5 @@
 var app = angular.module('oden-app', ['ngRoute']);
-var fileHandler = require('./src/fileHandler.js');
+var fileHandler = require(`./src/fileHandler.js`);
 
 app.config(function($routeProvider) {
   $routeProvider
@@ -25,13 +25,13 @@ app.config(function($routeProvider) {
 });
 
 app.controller('homeCtrl', function($scope) {
-  $scope.categories = fileHandler.parseJson('./json/category.json').categories;
+  $scope.categories = fileHandler.parseJson('json/category.json').categories;
 });
 
 app.controller('rssConfigCtrl', function($scope) {
   $scope.vmRss = null;
 
-  $scope.response = fileHandler.parseJson('./json/rss.json');
+  $scope.response = fileHandler.parseJson('json/rss.json');
   $scope.isResponseEmpty = true;
 
   $scope.checkResponse = function() {
@@ -48,14 +48,14 @@ app.controller('rssConfigCtrl', function($scope) {
     var input = $scope.vmRss;
     if (input != "") {
 
-      let rssArray = fileHandler.parseJson('./json/rss.json');
+      let rssArray = fileHandler.parseJson('json/rss.json');
       let parsedInput = input.split(",");
       let concatArray = rssArray.concat(parsedInput);
       let stringedArray = JSON.stringify(concatArray);
 
-      fileHandler.writeJson('./json/rss.json', stringedArray);
+      fileHandler.writeJson('json/rss.json', stringedArray);
 
-      $scope.response = fileHandler.parseJson('./json/rss.json');
+      $scope.response = fileHandler.parseJson('json/rss.json');
       $scope.checkResponse();
     } else {
       alert("You didn't type a link.");
@@ -63,13 +63,13 @@ app.controller('rssConfigCtrl', function($scope) {
   };
 
   $scope.delete = function(index) {
-    let rssArray = fileHandler.parseJson('./json/rss.json');
+    let rssArray = fileHandler.parseJson('json/rss.json');
     rssArray.splice(index, 1);
     let stringedArray = JSON.stringify(rssArray);
 
-    fileHandler.writeJson('./json/rss.json', stringedArray);
+    fileHandler.writeJson('json/rss.json', stringedArray);
 
-    $scope.response = fileHandler.parseJson('./json/rss.json');
+    $scope.response = fileHandler.parseJson('json/rss.json');
     $scope.checkResponse();
   };
 });
@@ -103,8 +103,8 @@ app.controller('scrapeCtrl', function($scope, $http) {
     var xmlParser = new DOMParser();
     let jsonPromises = [];
     let savePromises = [];
-    jsonPromises.push(fileHandler.parseJsonPromise('./json/rss.json'));
-    jsonPromises.push(fileHandler.parseJsonPromise('./json/category.json'));
+    jsonPromises.push(fileHandler.parseJsonPromise('json/rss.json'));
+    jsonPromises.push(fileHandler.parseJsonPromise('json/category.json'));
 
     // let httpRequestRss = new XMLHttpRequest();
     // httpRequestRss.open('GET', objRss[r], false);
