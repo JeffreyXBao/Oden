@@ -12,15 +12,15 @@ function createWindow() {
   let dataFolder = `${appDataPath}/oden`;
   initNode.checkFolderExists(dataFolder, () => {
     initNode.checkFolderExists(`${dataFolder}/articles`, () => {});
-    initNode.checkFolderExists(`${dataFolder}/json`, () => {      
+    initNode.checkFolderExists(`${dataFolder}/json`, () => {
       initNode.checkFileExists(`${dataFolder}/json/category.json`, `${appPath}/json/category.json`);
       initNode.checkFileExists(`${dataFolder}/json/directory.json`, `${appPath}/json/directory.json`);
       initNode.checkFileExists(`${dataFolder}/json/rss.json`, `${appPath}/json/rss.json`);
       //initNode.checkFileExists(`$${dataFolder}/oden/json/settings.json`, `${appPath}/json/settings.json`);
     });
   });
-  // Create the browser window.
 
+  // Create the browser window.
   win = new BrowserWindow({
     width: 800,
     height: 600
@@ -77,6 +77,6 @@ exports.openWindow = function(name) {
       javascript: false
     }
   });
-  newWin.loadURL(`${dirPath}/articles/${name}/index.html`);
+  newWin.loadURL(`${appDataPath}/oden/articles/${name}/index.html`);
   //newWin.webContents.openDevTools();
 };

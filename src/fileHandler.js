@@ -68,7 +68,6 @@ exports.categorizeArticles = function(queueArray) {
 
         if (!fileAlreadyExists) {
           saveArticle(link, saveName);
-
           let directoryItemObj = new directoryItemObjectGenerator(itemObj.title, itemObj.pubDate, link, saveName);
           directory.articles.push(directoryItemObj);
         }
@@ -88,7 +87,6 @@ exports.categorizeArticles = function(queueArray) {
 
                   if (!subcategoryExists) {
                     directory.articles[i].cats[e].subs.push(itemObj.subcategoriesToSave[c]);
-                    //break loop1;
                   }
                   categoryExists = true;
                 }
