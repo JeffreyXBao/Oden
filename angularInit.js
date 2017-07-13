@@ -169,10 +169,18 @@ app.controller('scrapeCtrl', function($scope, $http) {
         scrapePromises.push(httpPromiseConstructor(rssArray[r]));
       }
 
-      Promise.all(scrapePromises).then(function(returnData) {
+      Promise.all(scrapePromises.map(reflect)).then(function(returnData) {
+        let success = returnData.filter(x => x.status === "resolved");
+
+        let newReturnData = [];
+
+        for (let q = 0; q < success.length; q++) {
+          newReturnData.push(success[q].v);
+        }
+
         let scrapeItemArray = [];
-        for (r = 0; r < returnData.length; r++) {
-          let rssPage = $.parseXML(returnData[r].data);
+        for (r = 0; r < newReturnData.length; r++) {
+          let rssPage = $.parseXML(newReturnData[r].data);
           console.log(rssPage);
           let items = rssPage.getElementsByTagName('item');
 
@@ -180,8 +188,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
             scrapeItemArray.push(items[i]);
           }
         }
-        console.log(scrapeItemArray);
-        scrapeItems(scrapeItemArray)
+        scrapeItems(scrapeItemArray);
       }).catch(error => {
         console.log(error);
       });
@@ -193,13 +200,20 @@ app.controller('scrapeCtrl', function($scope, $http) {
           itemPromises.push(itemPromiseConstructor(inputArray[i]));
         }
 
-        Promise.all(itemPromises).then(returnArrayArray => {
+        Promise.all(itemPromises.map(reflect)).then(returnArrayArray => {
+          let successReturnArrayArray = returnArrayArray.filter(x => x.status === "resolved");
+          let newReturnArrayArray = [];
+
+          for (let h = 0; h < successReturnArrayArray.length; h++) {
+            newReturnArrayArray.push(successReturnArrayArray[h].v)
+          }
+
           let superArray = [];
 
-          for (let a = 0; a < returnArrayArray.length; a++) {
-            if (returnArrayArray[a].length > 0) {
-              for (let r = 0; r < returnArrayArray[a].length; r++)
-                superArray.push(returnArrayArray[a][r]);
+          for (let a = 0; a < newReturnArrayArray.length; a++) {
+            if (newReturnArrayArray[a].length > 0) {
+              for (let r = 0; r < newReturnArrayArray[a].length; r++)
+                superArray.push(newReturnArrayArray[a][r]);
             }
           }
 
@@ -213,7 +227,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
         return $http({
           method: 'GET',
           url: path
-        })
+        });
       }
 
       function itemPromiseConstructor(item) {
@@ -222,7 +236,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
           $http({
             method: 'GET',
             url: item.getElementsByTagName('link')[0].innerHTML
-          }).then(function successCallback(response) {
+          }).then(function (response) {
             let parsedHtml = xmlParser.parseFromString(response.data, "text/html");
             let textToCheck = parsedHtml.getElementsByTagName('p');
 
@@ -265,6 +279,10 @@ app.controller('scrapeCtrl', function($scope, $http) {
           });
         });
       }
+    }
+
+    function reflect(promise) {
+      return promise.then(function(v){ return {v:v, status: "resolved" }}, function(e){ return {e:e, status: "rejected" }});
     }
   };
 });
