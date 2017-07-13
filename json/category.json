@@ -1,18 +1,10 @@
 {
-   "categories":[
-      {
-         "name":"Domestic",
-         "subs":[
-           {
-              "name":"Trump",
-              "keywords":[
-                 "Trump",
-                 "President",
-                 "White House"
-              ],
-              "articles":[]
-           }
-         ]
-      }
-   ]
+  "categories": [{
+    "name": "Domestic",
+    "subs": [{
+      "name": "Trump",
+      "keywords": ["Trump", "President", "White House"],
+      "articles": []
+    }]
+  }]
 }

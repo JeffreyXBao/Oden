@@ -1,29 +1,56 @@
-<div ng-controller="rssConfigCtrl">
-  <div class="container text-center">
-      <div class="jumbotron">
-          <h1 class="display-3">Category Configuration</h1>
-          <p class="lead">Here, you can set categories (and subcategories) for Oden to categorize articles.</p>
-      </div>
-
-      <div class="row">
-          <div class="col-sm-4">
-            <div class="panel-group">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#collapse1">Collapsible list group</a>
-                  </h4>
-                </div>
-                <div id="collapse1" class="panel-collapse collapse">
-                  <ul class="list-group">
-                    <li class="list-group-item">One</li>
-                    <li class="list-group-item">Two</li>
-                    <li class="list-group-item">Three</li>
-                  </ul>
-                  <div class="panel-footer">Footer</div>
-                </div>
+<div ng-controller="catConfigCtrl">
+  <div class="container">
+    <link href="css/home.css" rel="stylesheet">
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <h1 class="display-3">Category Configuration</h1>
+      <p class="lead">Here, you can set categories (and subcategories) for Oden to categorize articles. There's no delete feature right now, so don't mess up!</p>
+    </div>
+    <div class="just-padding">
+      <div class="list-group list-group-root well">
+        <a class="list-group-item"><b>Categories:</b></a>
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="New Category Name" ng-model="newCatName">
+          <span class="input-group-btn">
+                <button class="btn btn-success" type="button" ng-click="addCat()"><span class="glyphicon glyphicon-plus"></span></button>
+          </span>
+        </div>
+        <div ng-repeat="category in categoryJson.categories">
+          <a class="list-group-item">
+            {{category.name}}
+          </a>
+          <div class="list-group">
+            <a class="list-group-item" style="padding-left:30px">
+              <b>Subcategories:</b>
+            </a>
+            <div class="input-group">
+              <input type="text" class="form-control" style="padding-left:30px" placeholder="New Subcategory Name">
+              <span class="input-group-btn">
+                <button class="btn btn-success" type="button" ng-click="addSub($index)"><span class="glyphicon glyphicon-plus"></span></button>
+              </span>
+            </div>
+            <div ng-repeat="sub in category.subs">
+              <a class="list-group-item" style="padding-left:30px">
+                {{sub.name}}
+              </a>
+              <a class="list-group-item" style="padding-left:45px">
+                <b>Keywords:</b>
+              </a>
+              <div class="input-group">
+                <input type="text" class="form-control" style="padding-left:45px" placeholder="New Keyword">
+                <span class="input-group-btn">
+                      <button class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+                </span>
+              </div>
+              <div class="list-group">
+                <a class="list-group-item" ng-repeat="keyword in sub.keywords" style="padding-left:45px" ng-click="openPage(item.path)">
+                  {{keyword}}
+                </a>
               </div>
             </div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>

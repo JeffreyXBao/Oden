@@ -1,5 +1,7 @@
 var app = angular.module('oden-app', ['ngRoute']);
 var fileHandler = require(`./src/fileHandler.js`);
+const remote = require('electron').remote;
+var main = remote.require('./main.js');
 
 app.config(function($routeProvider) {
   $routeProvider
@@ -26,19 +28,67 @@ app.config(function($routeProvider) {
 
 app.controller('homeCtrl', function($scope) {
   $scope.categories = fileHandler.parseJson('json/category.json').categories;
+  $scope.openPage = function(path) {
+    main.openWindow(path);
+  };
+});
+
+app.controller('catConfigCtrl', function($scope) {
+  $scope.categoryJson = fileHandler.parseJson('json/category.json');
+
+  $scope.checkExists = function() {
+    if ($scope.categoryJson === undefined || $scope.categoryJson.categories.length == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  $scope.addcat = function() {
+    console.log('handleAddDivClick called');
+    var input = $scope.newCatName;
+    if (input != "") {
+      let catObj = fileHandler.parseJson('json/category.json');
+      catObj.push(new catObjGenerator(input));
+      let stringedObj = JSON.stringify(catObj);
+
+      fileHandler.writeJson('json/category.json', stringedObj);
+
+      $scope.categoryJson = fileHandler.parseJson('json/category.json');
+
+      function catObjGenerator(catName) {
+        this.name = catName;
+        this.subs = [];
+      }
+    } else {
+      alert("You didn't type a name.");
+    }
+  };
+
+  $scope.delete = function(index) {
+    let rssArray = fileHandler.parseJson('json/rss.json');
+    rssArray.splice(index, 1);
+    let stringedArray = JSON.stringify(rssArray);
+
+    fileHandler.writeJson('json/rss.json', stringedArray);
+
+    $scope.response = fileHandler.parseJson('json/rss.json');
+    $scope.checkResponse();
+  };
 });
 
 app.controller('rssConfigCtrl', function($scope) {
   $scope.vmRss = null;
 
   $scope.response = fileHandler.parseJson('json/rss.json');
-  $scope.isResponseEmpty = true;
+  //$scope.isResponseEmpty = true;
 
   $scope.checkResponse = function() {
     if ($scope.response === undefined || $scope.response.length == 0) {
-      $scope.isResponseEmpty = true;
+      //$scope.isResponseEmpty = true;
+      return true;
     } else {
-      $scope.isResponseEmpty = false;
+      //$scope.isResponseEmpty = false;
+      return false;
     }
     return $scope.isResponseEmpty;
   };

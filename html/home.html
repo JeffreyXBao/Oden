@@ -1,26 +1,25 @@
 <div ng-controller="homeCtrl">
   <div class="container">
-  <link href="css/home.css" rel="stylesheet">
-  <!-- Main component for a primary marketing message or call to action -->
-  <div class="jumbotron">
+    <link href="css/home.css" rel="stylesheet">
+    <!-- Main component for a primary marketing message or call to action -->
+    <div class="jumbotron">
       <h1 class="display-3">Home</h1>
       <p class="lead">test</p>
-  </div>
-
-  <div class="just-padding">
-    <div class="list-group list-group-root well">
-      <div ng-repeat="category in categories track by $index">
-        <a href="#" class="list-group-item">{{category.name}}</a>
-        <div class="list-group">
-          <div ng-repeat="sub in category.subs track by $index">
-            <a href="#" class="list-group-item" style="padding-left:30px">{{sub.name}}</a>
-            <div class="list-group">
-              <a href="#" class="list-group-item" ng-repeat="item in sub.articles track by $index" style="padding-left:45px">{{item.name}}</a>
+    </div>
+    <div class="just-padding">
+      <div class="list-group list-group-root well">
+        <div ng-repeat="category in categories">
+          <a class="list-group-item">{{category.name}}</a>
+          <div class="list-group">
+            <div ng-repeat="sub in category.subs">
+              <a class="list-group-item" style="padding-left:30px">{{sub.name}}</a>
+              <div class="list-group">
+                <a class="list-group-item" ng-repeat="item in sub.articles" style="padding-left:45px" ng-click="openPage(item.path)">{{item.name}}</a>
+              </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<!-- /container -->
 </div>

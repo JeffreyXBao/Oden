@@ -4,14 +4,15 @@ var exports = module.exports = {};
 const remote = require('electron').remote;
 const app = remote.app;
 const appPath = app.getAppPath();
+const appDataPath = app.getPath('documents');
 
 exports.parseJson = function(path) {
-  var data = fs.readFileSync(`${appPath}/${path}`, 'utf-8');
+  var data = fs.readFileSync(`${appDataPath}/oden/${path}`, 'utf-8');
   return JSON.parse(data);
 };
 
 exports.parseJsonAsync = function(path, callback) {
-  fs.readFile(`${appPath}/${path}`, 'utf-8', (err, data) => {
+  fs.readFile(`${appDataPath}/oden/${path}`, 'utf-8', (err, data) => {
     if (err) throw err;
     callback(JSON.parse(data));
   });
@@ -19,37 +20,16 @@ exports.parseJsonAsync = function(path, callback) {
 
 exports.parseJsonPromise = function(path) {
   return new Promise(function(resolve, reject) {
-    fs.readFile(`${appPath}/${path}`, 'utf-8', (err, data) => {
+    fs.readFile(`${appDataPath}/oden/${path}`, 'utf-8', (err, data) => {
       if (err) return reject(err);
       resolve(JSON.parse(data));
     });
   });
 };
-// exports.getScrapingResources = function(callback) {
-//   function readJson(path) {
-//     var returnData = fs.readFile(path, 'utf-8', (err, data) => {
-//       if (err) throw err;
-//       return data;
-//     });
-//     return returnData;
-//   }
-//
-//   let readPromise = new Promise((resolve, reject) => {
-//     let rssString = readJson('./json/rss.json');
-//     let categoryString = readJson('./json/category.json');
-//
-//     resolve(JSON.parse(rssString), JSON.parse(categoryString));
-//   });
-//
-//   readPromise.then((returnedRss, returnedCategory) => {
-//     callback(returnedRss, returnedCategory);
-//   })
-//   .catch((reason) => {
-//     console.log(reason);
-//   });
-// }
+
 exports.writeJson = function(path, input) {
-  fs.writeFileSync(path, input);
+  console.log(`${appDataPath}/oden/${path}`);
+  fs.writeFileSync(`${appDataPath}/oden/${path}`, input);
 };
 
 exports.categorizeArticles = function(queueArray) {
@@ -143,8 +123,8 @@ exports.categorizeArticles = function(queueArray) {
         console.log("category array didn't match subcategory array, skipping");
       }
     }
-    fs.writeFileSync(`${appPath}/json/directory.json`, JSON.stringify(directory));
-    fs.writeFileSync(`${appPath}/json/category.json`, JSON.stringify(categoryObj));
+    fs.writeFileSync(`${appDataPath}/oden/json/directory.json`, JSON.stringify(directory));
+    fs.writeFileSync(`${appDataPath}/oden/json/category.json`, JSON.stringify(categoryObj));
   }
 
   function categoryItemObjectGenerator(name, pubDate, path) {
@@ -169,11 +149,11 @@ exports.categorizeArticles = function(queueArray) {
   async function saveArticle(link, saveName) {
     var options = {
       urls: [link],
-      directory: `${appPath}/articles/${saveName}/`,
+      directory: `${appDataPath}/oden/articles/${saveName}/`,
     };
 
     scrape(options).then(result => {
-      /* some code here */
+      console.log(`successfully saved ${saveName}`);
     }).catch(err => {
       console.log(err);
     });

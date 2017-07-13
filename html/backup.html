@@ -1,0 +1,53 @@
+<div ng-controller="catConfigCtrl">
+  <div class="container text-center">
+    <div class="jumbotron">
+      <h1 class="display-3">Category Configuration</h1>
+      <p class="lead">Here, you can set categories (and subcategories) for Oden to categorize articles.</p>
+    </div>
+
+    <div style="padding:15px">
+      <div class="list-group list-group-root well">
+        <div ng-repeat="category in categoryJson.categories">
+          <a class="list-group-item"><b>Categories:</b></a>
+          <a class="list-group-item">{{category.name}}</a>
+          <div class="list-group">
+            <div ng-repeat="sub in category.subs">
+              <a href="#" class="list-group-item" style="padding-left:30px">{{sub.name}}</a>
+              <div class="list-group">
+                <a href="#" class="list-group-item" ng-repeat="item in sub.articles" style="padding-left:45px" ng-click="openPage(item.path)">{{item.name}}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div <p>Sorting:</p>
+    <ul class="list-group" style="line-height:30px">
+      <li class="list-group-item" style="text-align:left">
+        <b>Categories:</b>
+      </li>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="New Category Name">
+        <span class="input-group-btn">
+              <button class="btn btn-success" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+        </span>
+      </div>
+      <li class="list-group-item" ng-show="checkExists()">
+        You have no categories loser. :(
+      </li>
+      <li ng-repeat="category in categoryJson.categories" class="list-group-item" style="text-align:left">
+        {{category.name}}
+        <span class="pull-right button-group">
+                <button type="button" class="btn btn-danger" ng-click="delete($index)"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+        </span>
+        <ul>
+          <li ng-repeat="sub in category.subs" class="list-group-item" style="text-align:left;padding-left:30px">
+            {{sub.name}}
+            <span class="pull-right button-group">
+                  <button type="button" class="btn btn-danger" ng-click="delete($index)"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+            </span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
