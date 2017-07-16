@@ -51,10 +51,11 @@ exports.categorizeArticles = function(queueArray) {
       let itemObj = queueArray[q];
       let link = itemObj.link;
       let title = itemObj.title;
-      if (title.includes('![CDATA[')) {
-        title = title.replace(/<!\[CDATA\[/g, "");
-        title = title.replace(/\]\]>/g, "");
-      }
+      title = title.replace(/<!\[CDATA\[/g, "");
+      title = title.replace(/\]\]>/g, "");
+      title = title.replace(/\'/g, "");
+      title = title.replace(/&#039;/g, "");
+      title = title.replace(/;/g, "");
       let saveName = title + itemObj.pubDate;
       saveName = saveName.replace(/\ /g, "_");
       saveName = saveName.replace(/,/g, "_");
