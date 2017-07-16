@@ -50,14 +50,19 @@ exports.categorizeArticles = function(queueArray) {
     for (q = 1; q < queueArray.length; q++) {
       let itemObj = queueArray[q];
       let link = itemObj.link;
-      let saveName = itemObj.title + itemObj.pubDate;
+      let title = itemObj.title;
+      if (title.includes('![CDATA[')) {
+        title = title.replace(/<!\[CDATA\[/g, "");
+        title = title.replace(/\]\]>/g, "");
+      }
+      let saveName = title + itemObj.pubDate;
       saveName = saveName.replace(/\ /g, "_");
       saveName = saveName.replace(/,/g, "_");
       saveName = saveName.replace(/:/g, "_");
       saveName = saveName.replace(/\./g, "_");
       let fileAlreadyExists = false;
       console.log("saving " + link);
-
+      console.log(saveName);
       if (itemObj.categoriesToSave.length == itemObj.subcategoriesToSave.length) {
         for (let i = 0; i < directory.articles.length; i++) {
           if (directory.articles[i].path == saveName && directory.articles[i].pubDate == itemObj.pubDate) {
@@ -68,7 +73,7 @@ exports.categorizeArticles = function(queueArray) {
 
         if (!fileAlreadyExists) {
           saveArticle(link, saveName);
-          let directoryItemObj = new directoryItemObjectGenerator(itemObj.title, itemObj.pubDate, link, saveName);
+          let directoryItemObj = new directoryItemObjectGenerator(title, itemObj.pubDate, link, saveName);
           directory.articles.push(directoryItemObj);
         }
 
@@ -108,7 +113,7 @@ exports.categorizeArticles = function(queueArray) {
               for (let c = 0; c < categoryObj.categories[b].subs.length; c++) {
                 if (categoryObj.categories[b].subs[c].name == itemObj.subcategoriesToSave[a]) {
                   subcategoryExists = true;
-                  categoryObj.categories[b].subs[c].articles.push(new categoryItemObjectGenerator(itemObj.title, itemObj.pubDate, saveName));
+                  categoryObj.categories[b].subs[c].articles.push(new categoryItemObjectGenerator(title, itemObj.pubDate, saveName));
                 }
               }
             }

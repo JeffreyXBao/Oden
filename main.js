@@ -26,12 +26,13 @@ function createWindow() {
     height: 600
   });
 
-  //win.setMenu(null)
+  //win.setMenu(null); turn on for build
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
+  //win.webContents.openDevTools(); turn off for build
   win.webContents.openDevTools();
 
   // Emitted when the window is closed.
