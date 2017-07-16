@@ -143,9 +143,15 @@ app.controller('settingsCtrl', function($scope) {
 });
 
 app.controller('scrapeCtrl', function($scope, $http) {
+  $scope.handleTimeTravelClick = function() {
+    console.log("Time Travel initialized");
+    $scope.scrapeInfo = 'Time Travel initialized';
+    //scrapeLog('Time Travel Initialized');
+  };
   $scope.handleScrapeClick = function() {
     console.log("Scrape initialized");
-    $scope.scrapeInfo = "Scrape initialized";
+    //scrapeLog('Scrape initialized');
+    $scope.scrapeInfo = 'Scrape initialized';
 
     var xmlParser = new DOMParser();
     let jsonPromises = [];
@@ -159,6 +165,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
       initScrape(rssArray, categoryObj);
     }).catch(error => {
       console.log(error);
+      scrapeLog(error);
     });
 
     async function initScrape(rssArray, categoryObj) {
@@ -191,6 +198,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
         scrapeItems(scrapeItemArray);
       }).catch(error => {
         console.log(error);
+        scrapeLog(error);
       });
 
       function scrapeItems(inputArray) {
@@ -217,9 +225,10 @@ app.controller('scrapeCtrl', function($scope, $http) {
             }
           }
 
-          fileHandler.categorizeArticles(superArray);
+          fileHandler.categorizeArticles(superArray, scrapeLog);
         }).catch(error => {
           console.log(error);
+          scrapeLog(error);
         });
       }
 
@@ -236,7 +245,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
           $http({
             method: 'GET',
             url: item.getElementsByTagName('link')[0].innerHTML
-          }).then(function (response) {
+          }).then(function(response) {
             let parsedHtml = xmlParser.parseFromString(response.data, "text/html");
             let textToCheck = parsedHtml.getElementsByTagName('p');
 
@@ -282,7 +291,21 @@ app.controller('scrapeCtrl', function($scope, $http) {
     }
 
     function reflect(promise) {
-      return promise.then(function(v){ return {v:v, status: "resolved" }}, function(e){ return {e:e, status: "rejected" }});
+      return promise.then(function(v) {
+        return {
+          v: v,
+          status: "resolved"
+        }
+      }, function(e) {
+        return {
+          e: e,
+          status: "rejected"
+        }
+      });
     }
   };
+
+  function scrapeLog(msg) {
+    $scope.scrapeInfo += `\n${msg}`
+  }
 });

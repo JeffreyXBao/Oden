@@ -32,7 +32,7 @@ exports.writeJson = function(path, input) {
   fs.writeFileSync(`${appDataPath}/oden/${path}`, input);
 };
 
-exports.categorizeArticles = function(queueArray) {
+exports.categorizeArticles = function(queueArray, scrapeLog) {
   console.log(queueArray);
 
   let jsonPromises = [];
@@ -40,13 +40,15 @@ exports.categorizeArticles = function(queueArray) {
   jsonPromises.push(fileHandler.parseJsonPromise('json/category.json'));
 
   Promise.all(jsonPromises).then(returnValues => {
+    scrapeLog('config files successfully loaded');
+    //scope.scrapeInfo += 'config files successfully loaded';
     saveLoop(returnValues[0], returnValues[1]);
   }).catch(error => {
     console.log(error);
   });
 
   function saveLoop(directory, categoryObj) {
-
+    savePromiseArray = [];
     for (q = 1; q < queueArray.length; q++) {
       let itemObj = queueArray[q];
       let link = itemObj.link;
@@ -63,6 +65,9 @@ exports.categorizeArticles = function(queueArray) {
       saveName = saveName.replace(/\./g, "_");
       let fileAlreadyExists = false;
       console.log("saving " + link);
+      //scope.scrapeInfo += "\nsaving " + link;
+      scrapeLog(`saving ${link}`);
+
       console.log(saveName);
       if (itemObj.categoriesToSave.length == itemObj.subcategoriesToSave.length) {
         for (let i = 0; i < directory.articles.length; i++) {
@@ -73,7 +78,8 @@ exports.categorizeArticles = function(queueArray) {
         }
 
         if (!fileAlreadyExists) {
-          saveArticle(link, saveName);
+          //saveArticle(link, saveName);
+          savePromiseArray.push(saveArticlePromiseGenerator(link, saveName));
           let directoryItemObj = new directoryItemObjectGenerator(title, itemObj.pubDate, link, saveName);
           directory.articles.push(directoryItemObj);
         }
@@ -121,14 +127,25 @@ exports.categorizeArticles = function(queueArray) {
           }
           if (!categoryExists) {
             console.log("category not found, cannot save");
+            //scope.scrapeInfo += "category not found, cannot save";
+            scrapeLog("category not found, cannot save");
           }
         }
       } else {
         console.log("category array didn't match subcategory array, skipping");
+        //scope.scrapeInfo += "category array didn't match subcategory array, skipping";
+        scrapeLog("category array didn't match subcategory array, skipping");
       }
     }
     fs.writeFileSync(`${appDataPath}/oden/json/directory.json`, JSON.stringify(directory));
     fs.writeFileSync(`${appDataPath}/oden/json/category.json`, JSON.stringify(categoryObj));
+    Promise.all(savePromiseArray).then(() => {
+      console.log('Done!');
+      //scope.scrapeInfo += '\nDone!';
+      scrapeLog('done!');
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
   function categoryItemObjectGenerator(name, pubDate, path) {
@@ -150,16 +167,26 @@ exports.categorizeArticles = function(queueArray) {
     this.subs = [subcatName];
   }
 
-  async function saveArticle(link, saveName) {
+  function saveArticlePromiseGenerator(link, saveName) {
     var options = {
       urls: [link],
       directory: `${appDataPath}/oden/articles/${saveName}/`,
     };
 
-    scrape(options).then(result => {
+    return scrape(options).then(result => {
       console.log(`successfully saved ${saveName}`);
-    }).catch(err => {
-      console.log(err);
     });
   }
+  // async function saveArticle(link, saveName) {
+  //   var options = {
+  //     urls: [link],
+  //     directory: `${appDataPath}/oden/articles/${saveName}/`,
+  //   };
+  //
+  //   scrape(options).then(result => {
+  //     console.log(`successfully saved ${saveName}`);
+  //   }).catch(err => {
+  //     console.log(err);
+  //   });
+  // }
 };
