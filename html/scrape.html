@@ -1,4 +1,9 @@
 <div ng-controller="scrapeCtrl">
+  <script>
+    $(document).ready(function() {
+      $('[data-toggle="popover"]').popover();
+    });
+  </script>
   <div class="container text-center">
     <div class="jumbotron">
       <h1 class="display-3">Scraper</h1>
@@ -7,10 +12,34 @@
 
     <div class="row">
       <div class="col-md-12">
-        <button type="button" class="btn btn-primary btn-block" id="btnScrape" ng-click="handleScrapeClick()"><b>Initialize Scrape</b></button>
-        <button type="button" class="btn btn-primary btn-block" ng-click="handleTimeTravelClick()"><b>Initialize Google News Time Travel</b></button>
-        <img src="./img/loader.gif">
-        <div>
+        <div class="row">
+          <div class="col">
+            <button type="button" class="btn btn-primary" id="btnScrape" ng-click="handleScrapeClick()">Initialize Scrape</button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Initialize Google News Time Travel
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a ng-click="handleTimeTravelClick(30)">30 days</a></li>
+                <li><a ng-click="handleTimeTravelClick(180)">180 days</a></li>
+                <li><a ng-click="handleTimeTravelClick(360)">360 days</a></li>
+                <li><a ng-click="handleTimeTravelClick(-1)">Max. (back to 2010)</a></li>
+                <li><a ng-click="">Custom (not working yet)</a></li>
+              </ul>
+            </div>
+            <button type="button" class="btn btn-primary" ng-click="handlePartyClick()">
+              Initialize Google News Super Party
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="popover" title="What is Google News Super Party?" data-content="Google News Super Party searches Google News with your categories and subcategories as keywords." data-placement="bottom">
+              <span class="glyphicon glyphicon-question-sign"></span>
+            </button>
+            <div>
+            </div>
+          </div>
+          <div class="col">
+            <img src="./img/loader.gif">
+          </div>
           <textarea readonly rows="4" class="col-md-12" ng-model="scrapeInfo" style="resize: none;"></textarea>
         </div>
       </div>

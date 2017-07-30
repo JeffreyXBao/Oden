@@ -1,0 +1,129 @@
+{
+  "timegate_uri": "http://timetravel.mementoweb.org/timegate/http://news.google.com/news/rss/?ned\u003dus\u0026hl\u003den",
+  "timemap_uri": {
+    "json_format": "http://timetravel.mementoweb.org/timemap/json/http://news.google.com/news/rss/?ned\u003dus\u0026hl\u003den",
+    "link_format": "http://timetravel.mementoweb.org/timemap/link/http://news.google.com/news/rss/?ned\u003dus\u0026hl\u003den"
+  },
+  "mementos": {
+    "last": {
+      "datetime": "2017-07-16T05:24:03Z",
+      "uri": ["https://web.archive.org/web/20170716052403/https://news.google.com/news/rss/?ned\u003dus\u0026amp;hl\u003den"]
+    },
+    "prev": {
+      "datetime": "2017-07-15T01:20:26Z",
+      "uri": ["https://web.archive.org/web/20170715012026/https://news.google.com/news/rss/?ned\u003dus\u0026amp;hl\u003den", "//wayback.archive-it.org/all/20170715012026/https://news.google.com/news/rss/?ned\u003dus\u0026hl\u003den"]
+    },
+    "first": {
+      "datetime": "2017-06-28T17:28:32Z",
+      "uri": ["https://web.archive.org/web/20170628172832/https://news.google.com/news/rss/?ned\u003dus\u0026amp;hl\u003den"]
+    },
+    "closest": {
+      "datetime": "2017-07-16T05:24:03Z",
+      "uri": ["https://web.archive.org/web/20170716052403/https://news.google.com/news/rss/?ned\u003dus\u0026amp;hl\u003den", "//wayback.archive-it.org/all/20170716052403/https://news.google.com/news/rss/?ned\u003dus\u0026hl\u003den"]
+    }
+  },
+  "original_uri": "http://news.google.com/news/rss/?ned\u003dus\u0026hl\u003den"
+}, {
+  "timegate_uri": "http://timetravel.mementoweb.org/timegate/http://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss",
+  "timemap_uri": {
+    "json_format": "http://timetravel.mementoweb.org/timemap/json/http://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss",
+    "link_format": "http://timetravel.mementoweb.org/timemap/link/http://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss"
+  },
+  "mementos": {
+    "last": {
+      "datetime": "2017-06-25T05:37:09Z",
+      "uri": ["//wayback.archive-it.org/all/20170625053709/https://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss"]
+    },
+    "prev": {
+      "datetime": "2017-06-18T05:36:56Z",
+      "uri": ["https://web.archive.org/web/20170618053656/https://news.google.com/news?cf\u003dall\u0026amp;hl\u003den\u0026amp;pz\u003d1\u0026amp;ned\u003dus\u0026amp;output\u003drss", "//wayback.archive-it.org/all/20170618053656/https://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss"]
+    },
+    "first": {
+      "datetime": "2010-01-31T20:28:27Z",
+      "uri": ["https://web.archive.org/web/20100131202827/http://news.google.com/news?pz\u003d1\u0026amp;cf\u003dall\u0026amp;ned\u003dus\u0026amp;hl\u003den\u0026amp;output\u003drss"]
+    },
+    "closest": {
+      "datetime": "2017-06-25T05:37:09Z",
+      "uri": ["https://web.archive.org/web/20170625053709/https://news.google.com/news?cf\u003dall\u0026amp;hl\u003den\u0026amp;pz\u003d1\u0026amp;ned\u003dus\u0026amp;output\u003drss", "//wayback.archive-it.org/all/20170625053709/https://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss"]
+    }
+  },
+  "original_uri": "http://news.google.com/news?cf\u003dall\u0026hl\u003den\u0026pz\u003d1\u0026ned\u003dus\u0026output\u003drss"
+}
+
+{
+  "original_uri": "http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+  "timegate_uri": "http://timetravel.mementoweb.org/timegate/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+  "timemap_index": [{
+    "uri": "https://web.archive.org/web/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "ia"
+  }, {
+    "uri": "http://webarchive.proni.gov.uk/timemap/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "proni"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/webcite/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "webcite"
+  }, {
+    "uri": "http://webarchive.loc.gov/all/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "loc"
+  }, {
+    "uri": "http://wayback.archive-it.org/all/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "archiveit"
+  }, {
+    "uri": "http://webarchive.nationalarchives.gov.uk/timemap/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "uknationalarchives"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/can/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "gcwa"
+  }, {
+    "uri": "http://archive.is/timemap/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "archive.is"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/cr/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "hr"
+  }, {
+    "uri": "http://wayback.vefsafn.is/wayback/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "is"
+  }, {
+    "uri": "http://arquivo.pt/wayback/timemap/*/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "pt"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/cat/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "cat"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/aueb/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "aueb"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/es/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "es"
+  }, {
+    "uri": "http://collection.europarchive.org/nli/timemap/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "nli"
+  }, {
+    "uri": "http://timetravel.mementoweb.org/si/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "no",
+    "archive_id": "si"
+  }, {
+    "uri": "https://swap.stanford.edu/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "memento_compliant": "yes",
+    "archive_id": "swa"
+  }],
+  "timemap_uri": {
+    "json_format": "http://timetravel.mementoweb.org/timemap/json/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss",
+    "link_format": "http://timetravel.mementoweb.org/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss"
+  }
+}

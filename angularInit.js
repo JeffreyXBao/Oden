@@ -143,17 +143,73 @@ app.controller('settingsCtrl', function($scope) {
 });
 
 app.controller('scrapeCtrl', function($scope, $http) {
-  $scope.handleTimeTravelClick = function() {
-    console.log("Time Travel initialized");
-    $scope.scrapeInfo = 'Time Travel initialized';
-    //scrapeLog('Time Travel Initialized');
+  $scope.scrapeInfo = null;
+  $scope.handleTimeTravelClick = function(inputDays) {
+    const maxDate = new Date(2010, 0, 31);
+    let days = inputDays;
+    let currentDay = new Date();
+    currentDay = new Date(Math.trunc((currentDay) / (1000 * 60 * 60 * 24)) * (1000 * 60 * 60 * 24));
+    if (inputDays == -1) {
+      days = Math.trunc((currentDay - maxDate) / (1000 * 60 * 60 * 24));
+    }
+    console.log(`Time Travel initialized, going back ${days} days`);
+    $scope.scrapeInfo = `Time Travel initialized, going back ${days} days`;
+    $scope.scrapeInfo += (`\n${currentDay}`);
+
+    let httpPromiseArray = [];
+
+    httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss'));
+    httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news/rss/?ned=us&hl=en'));
+
+    Promise.all(httpPromiseArray).then(returnXml => {
+      console.log(returnXml[0]);
+      console.log(returnXml[1]);
+    }).catch(err => {
+      console.log(err);
+      $scope.scrapeInfo += `\n${err}`;
+    });
+    function convertToTwoDigit(input) {
+      if (input < 10) {
+        input = `0${input}`;
+      }
+      return input;
+    }
+
+    // for (let i = 0; i <= days; i++) {
+    //   let tempDay = currentDay - (1000 * 60 * 60 * 24 * i);
+    //   tempDay = new Date(tempDay);
+    //   let changeDay = new Date(2017, 05, 28);
+    //   let dateString = `${tempDay.getFullYear()}${convertToTwoDigit(tempDay.getMonth() +1)}${convertToTwoDigit(tempDay.getDate())}`;
+    // }
   };
+
+  $scope.handlePartyClick = function() {
+    fileHandler.parseJsonAsync('json/category.json', categoryJson => {
+      console.log(categoryJson);
+      $scope.scrapeInfo = 'Party initialized';
+      let arrayFiesta = [];
+      for (let i = 0; i < categoryJson.categories.length; i++) {
+        arrayFiesta.push(rssGenerator(categoryJson.categories[i].name));
+        for (let j = 0; j < categoryJson.categories[i].subs.length; j++) {
+          arrayFiesta.push(rssGenerator(categoryJson.categories[i].subs[j].name));
+        }
+      }
+
+      console.log(arrayFiesta);
+      initScrape(arrayFiesta, categoryJson);
+
+      function rssGenerator(name) {
+        let temp = name.replace(/\ /g, "%20");
+        return `https://news.google.com/news/rss/search/section/q/${temp}/${temp}?hl=en&ned=us`;
+      }
+    });
+  };
+
   $scope.handleScrapeClick = function() {
     console.log("Scrape initialized");
     //scrapeLog('Scrape initialized');
     $scope.scrapeInfo = 'Scrape initialized';
 
-    var xmlParser = new DOMParser();
     let jsonPromises = [];
     let savePromises = [];
     jsonPromises.push(fileHandler.parseJsonPromise('json/rss.json'));
@@ -167,145 +223,148 @@ app.controller('scrapeCtrl', function($scope, $http) {
       console.log(error);
       scrapeLog(error);
     });
+  };
 
-    async function initScrape(rssArray, categoryObj) {
-      let scrapePromises = [];
-      let articleReturnArray = [];
+  async function initScrape(rssArray, categoryObj) {
+    let scrapePromises = [];
+    let articleReturnArray = [];
+    var xmlParser = new DOMParser();
 
-      for (let r = 0; r < rssArray.length; r++) {
-        scrapePromises.push(httpPromiseConstructor(rssArray[r]));
+    for (let r = 0; r < rssArray.length; r++) {
+      scrapePromises.push(httpPromiseConstructor(rssArray[r]));
+    }
+
+    Promise.all(scrapePromises.map(reflect)).then(function(returnData) {
+      let success = returnData.filter(x => x.status === "resolved");
+
+      let newReturnData = [];
+
+      for (let q = 0; q < success.length; q++) {
+        newReturnData.push(success[q].v);
       }
 
-      Promise.all(scrapePromises.map(reflect)).then(function(returnData) {
-        let success = returnData.filter(x => x.status === "resolved");
+      let scrapeItemArray = [];
+      for (let  r = 0; r < newReturnData.length; r++) {
+        let rssPage = $.parseXML(newReturnData[r].data);
+        console.log(rssPage);
+        let items = rssPage.getElementsByTagName('item');
 
-        let newReturnData = [];
+        for (let i = 0; i < items.length; i++) {
+          scrapeItemArray.push(items[i]);
+        }
+      }
+      scrapeItems(scrapeItemArray);
+    }).catch(error => {
+      console.log(error);
+      scrapeLog(error);
+    });
 
-        for (let q = 0; q < success.length; q++) {
-          newReturnData.push(success[q].v);
+    function scrapeItems(inputArray) {
+      let itemPromises = [];
+
+      for (let i = 0; i < inputArray.length; i++) {
+        itemPromises.push(itemPromiseConstructor(inputArray[i]));
+      }
+
+      Promise.all(itemPromises.map(reflect)).then(returnArrayArray => {
+        let successReturnArrayArray = returnArrayArray.filter(x => x.status === "resolved");
+        let newReturnArrayArray = [];
+
+        for (let h = 0; h < successReturnArrayArray.length; h++) {
+          newReturnArrayArray.push(successReturnArrayArray[h].v)
         }
 
-        let scrapeItemArray = [];
-        for (r = 0; r < newReturnData.length; r++) {
-          let rssPage = $.parseXML(newReturnData[r].data);
-          console.log(rssPage);
-          let items = rssPage.getElementsByTagName('item');
+        let superArray = [];
 
-          for (let i = 0; i < items.length; i++) {
-            scrapeItemArray.push(items[i]);
+        for (let a = 0; a < newReturnArrayArray.length; a++) {
+          if (newReturnArrayArray[a].length > 0) {
+            for (let r = 0; r < newReturnArrayArray[a].length; r++)
+              superArray.push(newReturnArrayArray[a][r]);
           }
         }
-        scrapeItems(scrapeItemArray);
+
+        fileHandler.categorizeArticles(superArray, scrapeLog);
       }).catch(error => {
         console.log(error);
         scrapeLog(error);
       });
+    }
 
-      function scrapeItems(inputArray) {
-        let itemPromises = [];
-
-        for (let i = 0; i < inputArray.length; i++) {
-          itemPromises.push(itemPromiseConstructor(inputArray[i]));
-        }
-
-        Promise.all(itemPromises.map(reflect)).then(returnArrayArray => {
-          let successReturnArrayArray = returnArrayArray.filter(x => x.status === "resolved");
-          let newReturnArrayArray = [];
-
-          for (let h = 0; h < successReturnArrayArray.length; h++) {
-            newReturnArrayArray.push(successReturnArrayArray[h].v)
-          }
-
-          let superArray = [];
-
-          for (let a = 0; a < newReturnArrayArray.length; a++) {
-            if (newReturnArrayArray[a].length > 0) {
-              for (let r = 0; r < newReturnArrayArray[a].length; r++)
-                superArray.push(newReturnArrayArray[a][r]);
-            }
-          }
-
-          fileHandler.categorizeArticles(superArray, scrapeLog);
-        }).catch(error => {
-          console.log(error);
-          scrapeLog(error);
-        });
-      }
-
-      function httpPromiseConstructor(path) {
-        return $http({
+    function itemPromiseConstructor(item) {
+      return new Promise(function(resolve, reject) {
+        let itemPromiseArray = [];
+        $http({
           method: 'GET',
-          url: path
-        });
-      }
+          url: item.getElementsByTagName('link')[0].innerHTML
+        }).then(function(response) {
+          let parsedHtml = xmlParser.parseFromString(response.data, "text/html");
+          let textToCheck = parsedHtml.getElementsByTagName('p');
 
-      function itemPromiseConstructor(item) {
-        return new Promise(function(resolve, reject) {
-          let itemPromiseArray = [];
-          $http({
-            method: 'GET',
-            url: item.getElementsByTagName('link')[0].innerHTML
-          }).then(function(response) {
-            let parsedHtml = xmlParser.parseFromString(response.data, "text/html");
-            let textToCheck = parsedHtml.getElementsByTagName('p');
+          let catArray = [];
+          let subcatArray = [];
 
-            let catArray = [];
-            let subcatArray = [];
-
-            for (let c = 0; c < categoryObj.categories.length; c++) {
-              for (let s = 0; s < categoryObj.categories[c].subs.length; s++) {
-                let keyWordCount = 0;
-                for (let k = 0; k < categoryObj.categories[c].subs[s].keywords.length; k++) {
-                  let keyword = new RegExp(categoryObj.categories[c].subs[s].keywords[k], 'gi');
-                  for (let t = 0; t < textToCheck.length; t++) {
-                    let matches = textToCheck[t].innerHTML.match(keyword);
-                    if (matches !== null && matches !== undefined && matches !== []) {
-                      keyWordCount += matches.length;
-                    }
+          for (let c = 0; c < categoryObj.categories.length; c++) {
+            for (let s = 0; s < categoryObj.categories[c].subs.length; s++) {
+              let keyWordCount = 0;
+              for (let k = 0; k < categoryObj.categories[c].subs[s].keywords.length; k++) {
+                let keyword = new RegExp(categoryObj.categories[c].subs[s].keywords[k], 'gi');
+                for (let t = 0; t < textToCheck.length; t++) {
+                  let matches = textToCheck[t].innerHTML.match(keyword);
+                  if (matches !== null && matches !== undefined && matches !== []) {
+                    keyWordCount += matches.length;
                   }
                 }
-                if (keyWordCount > 5) {
-                  console.log(item.getElementsByTagName('title')[0].innerHTML);
-                  catArray.push(categoryObj.categories[c].name);
-                  subcatArray.push(categoryObj.categories[c].subs[s].name);
-                }
+              }
+              if (keyWordCount > 5) {
+                console.log(item.getElementsByTagName('title')[0].innerHTML);
+                catArray.push(categoryObj.categories[c].name);
+                subcatArray.push(categoryObj.categories[c].subs[s].name);
               }
             }
-            if (catArray.length > 0 && subcatArray.length > 0) {
-              let date = "";
-              if (item.getElementsByTagName('pubDate')[0] != undefined) {
-                date = item.getElementsByTagName('pubDate')[0].innerHTML;
-              }
-              itemPromiseArray.push({
-                title: item.getElementsByTagName('title')[0].innerHTML,
-                pubDate: date,
-                link: item.getElementsByTagName('link')[0].innerHTML,
-                categoriesToSave: catArray,
-                subcategoriesToSave: subcatArray
-              });
+          }
+          if (catArray.length > 0 && subcatArray.length > 0) {
+            let date = "";
+            if (item.getElementsByTagName('pubDate')[0] != undefined) {
+              date = item.getElementsByTagName('pubDate')[0].innerHTML;
             }
-            resolve(itemPromiseArray);
-          });
+            itemPromiseArray.push({
+              title: item.getElementsByTagName('title')[0].innerHTML,
+              pubDate: date,
+              link: item.getElementsByTagName('link')[0].innerHTML,
+              categoriesToSave: catArray,
+              subcategoriesToSave: subcatArray
+            });
+          }
+          resolve(itemPromiseArray);
         });
-      }
-    }
-
-    function reflect(promise) {
-      return promise.then(function(v) {
-        return {
-          v: v,
-          status: "resolved"
-        }
-      }, function(e) {
-        return {
-          e: e,
-          status: "rejected"
-        }
       });
     }
-  };
+  }
+
+  function httpPromiseConstructor(path) {
+    return $http({
+      method: 'GET',
+      url: path
+    });
+  }
+
+  function reflect(promise) {
+    return promise.then(function(v) {
+      return {
+        v: v,
+        status: "resolved"
+      }
+    }, function(e) {
+      return {
+        e: e,
+        status: "rejected"
+      }
+    });
+  }
 
   function scrapeLog(msg) {
-    $scope.scrapeInfo += `\n${msg}`
+    $scope.$apply(function() {
+      $scope.scrapeInfo += `\n${msg}`;
+    });
   }
 });

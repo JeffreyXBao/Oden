@@ -16,9 +16,16 @@
           </span>
         </div>
         <div ng-repeat="category in categoryJson.categories">
-          <a class="list-group-item">
-            {{category.name}}
-          </a>
+          <!-- <a class="list-group-item">
+              {{category.name}}
+            </a>
+          <span class="pull-right">
+            <button type="button" class="btn btn-danger" ng-click="delete($index)"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+          </span> -->
+          <div class="row">
+            <div class="col-md-8">{{category.name}}</div>
+            <div class="col-md-4"><button type="button" class="btn btn-danger" ng-click="delete($index)"><span class="glyphicon glyphicon-remove"></span> Delete</button></div>
+          </div>
           <div class="list-group">
             <a class="list-group-item" style="padding-left:30px">
               <b>Subcategories:</b>
