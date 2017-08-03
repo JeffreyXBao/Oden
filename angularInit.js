@@ -33,6 +33,7 @@ app.controller('homeCtrl', function($scope) {
   };
 });
 
+
 app.controller('catConfigCtrl', function($scope) {
   $scope.categoryJson = fileHandler.parseJson('json/category.json');
 
@@ -162,12 +163,15 @@ app.controller('scrapeCtrl', function($scope, $http) {
     httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news/rss/?ned=us&hl=en'));
 
     Promise.all(httpPromiseArray).then(returnXml => {
-      console.log(returnXml[0]);
-      console.log(returnXml[1]);
+      let oldArray = returnXml[0].data.split('\n');
+      let newArray = returnXml[1].data.split('\n');
+      console.log(oldArray);
+      console.log(newArray);
     }).catch(err => {
       console.log(err);
       $scope.scrapeInfo += `\n${err}`;
     });
+
     function convertToTwoDigit(input) {
       if (input < 10) {
         input = `0${input}`;
@@ -244,7 +248,7 @@ app.controller('scrapeCtrl', function($scope, $http) {
       }
 
       let scrapeItemArray = [];
-      for (let  r = 0; r < newReturnData.length; r++) {
+      for (let r = 0; r < newReturnData.length; r++) {
         let rssPage = $.parseXML(newReturnData[r].data);
         console.log(rssPage);
         let items = rssPage.getElementsByTagName('item');
