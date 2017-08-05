@@ -167,6 +167,16 @@ app.controller('scrapeCtrl', function($scope, $http) {
       let newArray = returnXml[1].data.split('\n');
       console.log(oldArray);
       console.log(newArray);
+
+      let mergedArray = oldArray.concat(newArray);
+      console.log(mergedArray);
+
+    for (let i = 0; i < mergedArray.length; i++) {
+      if (mergedArray[i].includes('rel="first memento"') || mergedArray[i].includes('rel="memento"')) {
+        let link = mergedArray[i].substring(mergedArray[i].lastIndexOf('<')+1,mergedArray[i].lastIndexOf('>'));
+        console.log(link);
+      }
+    }
     }).catch(err => {
       console.log(err);
       $scope.scrapeInfo += `\n${err}`;
