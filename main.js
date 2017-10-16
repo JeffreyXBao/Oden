@@ -1,15 +1,19 @@
 const {app, BrowserWindow} = require('electron');
 var initNode = require(`./src/initNode.js`);
 const appPath = app.getAppPath();
-const appDataPath = app.getPath('documents');
+//todo uncomment on release const docPath = app.getPath('documents');
+const docPath = 'F:/articlesTest';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
+//makes sure no scrapes are running concurrently
+exports.existingScrape = false;
+
 function createWindow() {
   //check if the needed json files exist
-  let dataFolder = `${appDataPath}/oden`;
+  let dataFolder = `${docPath}/oden`;
   initNode.checkFolderExists(dataFolder, () => {
     initNode.checkFolderExists(`${dataFolder}/articles`, () => {});
     initNode.checkFolderExists(`${dataFolder}/json`, () => {
@@ -74,10 +78,10 @@ exports.openWindow = function(name) {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: false
       javascript: false
     }
   });
-  newWin.loadURL(`${appDataPath}/oden/articles/${name}/index.html`);
+  newWin.loadURL(`${docPath}/oden/articles/${name}/index.html`);
   //newWin.webContents.openDevTools();
 };

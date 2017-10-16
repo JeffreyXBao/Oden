@@ -146,97 +146,127 @@ app.controller('settingsCtrl', function($scope) {
 app.controller('scrapeCtrl', function($scope, $http) {
   $scope.scrapeInfo = null;
   $scope.handleTimeTravelClick = function(inputDays) {
-    const maxDate = new Date(2010, 0, 31);
-    let days = inputDays;
-    let currentDay = new Date();
-    currentDay = new Date(Math.trunc((currentDay) / (1000 * 60 * 60 * 24)) * (1000 * 60 * 60 * 24));
-    if (inputDays == -1) {
-      days = Math.trunc((currentDay - maxDate) / (1000 * 60 * 60 * 24));
-    }
-    console.log(`Time Travel initialized, going back ${days} days`);
-    $scope.scrapeInfo = `Time Travel initialized, going back ${days} days`;
-    $scope.scrapeInfo += (`\n${currentDay}`);
-
-    let httpPromiseArray = [];
-
-    httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss'));
-    httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news/rss/?ned=us&hl=en'));
-
-    Promise.all(httpPromiseArray).then(returnXml => {
-      let oldArray = returnXml[0].data.split('\n');
-      let newArray = returnXml[1].data.split('\n');
-      console.log(oldArray);
-      console.log(newArray);
-
-      let mergedArray = oldArray.concat(newArray);
-      console.log(mergedArray);
-
-    for (let i = 0; i < mergedArray.length; i++) {
-      if (mergedArray[i].includes('rel="first memento"') || mergedArray[i].includes('rel="memento"')) {
-        let link = mergedArray[i].substring(mergedArray[i].lastIndexOf('<')+1,mergedArray[i].lastIndexOf('>'));
-        console.log(link);
+    if (!main.existingScrape) {
+      main.existingScrape = true;
+      const firstDate = new Date(2010, 0, 31);
+      let days = inputDays;
+      const todayms = new Date();
+      let currentDay = new Date(Math.trunc((todayms) / (1000 * 60 * 60 * 24)) * (1000 * 60 * 60 * 24));
+      let maxDate;
+      if (inputDays == -1) {
+        days = Math.trunc((currentDay - firstDate) / (1000 * 60 * 60 * 24));
+        maxDate = firstDate;
+      } else {
+        maxDate = new Date(todayms - (1000 * 60 * 60 * 24 * days));
       }
-    }
-    }).catch(err => {
-      console.log(err);
-      $scope.scrapeInfo += `\n${err}`;
-    });
 
-    function convertToTwoDigit(input) {
-      if (input < 10) {
-        input = `0${input}`;
+      let maxDateInt = (maxDate.getFullYear() * 10000000000) + ((maxDate.getMonth() + 1) * 100000000) + (maxDate.getDate() * 1000000) + (maxDate.getHours() * 10000) + (maxDate.getMinutes() * 100) + maxDate.getSeconds();
+
+      console.log(`Time Travel initialized, going back ${days} days`);
+      $scope.scrapeInfo = `Time Travel initialized, going back ${days} days`;
+      $scope.scrapeInfo += (`\nEarliest day is ${maxDateInt}`);
+
+      let httpPromiseArray = [];
+
+      httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news?cf=all&hl=en&pz=1&ned=us&output=rss'));
+      httpPromiseArray.push(httpPromiseConstructor('https://web.archive.org/web/timemap/link/http://news.google.com/news/rss/?ned=us&hl=en'));
+
+      Promise.all(httpPromiseArray).then(returnXml => {
+        let oldArray = returnXml[0].data.split('\n');
+        let newArray = returnXml[1].data.split('\n');
+        console.log(oldArray);
+        console.log(newArray);
+
+        let mergedArray = oldArray.concat(newArray);
+        console.log(mergedArray);
+
+        for (let i = 0; i < mergedArray.length; i++) {
+          if (mergedArray[i].includes('rel="first memento"') || mergedArray[i].includes('rel="memento"')) {
+            let link = mergedArray[i].substring(mergedArray[i].lastIndexOf('<') + 1, mergedArray[i].lastIndexOf('>'));
+            let dateInt = link.substring(link.lastIndexOf('web/') + 4, link.lastIndexOf('/http'));
+            if (dateInt >= maxDateInt) {
+              console.log(link);
+              console.log(dateInt);
+            }
+          }
+        }
+      }).catch(err => {
+        console.log(err);
+        $scope.scrapeInfo += `\n${err}`;
+      });
+
+      function convertToTwoDigit(input) {
+        if (input < 10) {
+          input = `0${input}`;
+        }
+        return input;
       }
-      return input;
+
+      // for (let i = 0; i <= days; i++) {
+      //   let tempDay = currentDay - (1000 * 60 * 60 * 24 * i);
+      //   tempDay = new Date(tempDay);
+      //   let changeDay = new Date(2017, 05, 28);
+      //   let dateString = `${tempDay.getFullYear()}${convertToTwoDigit(tempDay.getMonth() +1)}${convertToTwoDigit(tempDay.getDate())}`;
+      // }
+    } else {
+      $scope.scrapeInfo += '\n A scrape is already in progress!';
+      console.log('\n A scrape is already in progress!');
     }
 
-    // for (let i = 0; i <= days; i++) {
-    //   let tempDay = currentDay - (1000 * 60 * 60 * 24 * i);
-    //   tempDay = new Date(tempDay);
-    //   let changeDay = new Date(2017, 05, 28);
-    //   let dateString = `${tempDay.getFullYear()}${convertToTwoDigit(tempDay.getMonth() +1)}${convertToTwoDigit(tempDay.getDate())}`;
-    // }
   };
 
   $scope.handlePartyClick = function() {
-    fileHandler.parseJsonAsync('json/category.json', categoryJson => {
-      console.log(categoryJson);
-      $scope.scrapeInfo = 'Party initialized';
-      let arrayFiesta = [];
-      for (let i = 0; i < categoryJson.categories.length; i++) {
-        arrayFiesta.push(rssGenerator(categoryJson.categories[i].name));
-        for (let j = 0; j < categoryJson.categories[i].subs.length; j++) {
-          arrayFiesta.push(rssGenerator(categoryJson.categories[i].subs[j].name));
+    if (!main.existingScrape) {
+      main.existingScrape = true;
+      fileHandler.parseJsonAsync('json/category.json', categoryJson => {
+        console.log(categoryJson);
+        $scope.scrapeInfo = 'Party initialized';
+        let arrayFiesta = [];
+        for (let i = 0; i < categoryJson.categories.length; i++) {
+          arrayFiesta.push(rssGenerator(categoryJson.categories[i].name));
+          for (let j = 0; j < categoryJson.categories[i].subs.length; j++) {
+            arrayFiesta.push(rssGenerator(categoryJson.categories[i].subs[j].name));
+          }
         }
-      }
 
-      console.log(arrayFiesta);
-      initScrape(arrayFiesta, categoryJson);
+        console.log(arrayFiesta);
+        initScrape(arrayFiesta, categoryJson);
 
-      function rssGenerator(name) {
-        let temp = name.replace(/\ /g, "%20");
-        return `https://news.google.com/news/rss/search/section/q/${temp}/${temp}?hl=en&ned=us`;
-      }
-    });
+        function rssGenerator(name) {
+          let temp = name.replace(/\ /g, "%20");
+          return `https://news.google.com/news/rss/search/section/q/${temp}/${temp}?hl=en&ned=us`;
+        }
+      });
+    } else {
+      $scope.scrapeInfo += '\n A scrape is already in progress!';
+      console.log('\n A scrape is already in progress!');
+    }
   };
 
   $scope.handleScrapeClick = function() {
-    console.log("Scrape initialized");
-    //scrapeLog('Scrape initialized');
-    $scope.scrapeInfo = 'Scrape initialized';
+    if (!main.existingScrape) {
+      main.existingScrape = true;
+      console.log("Scrape initialized");
+      //scrapeLog('Scrape initialized');
+      $scope.scrapeInfo = 'Scrape initialized';
 
-    let jsonPromises = [];
-    let savePromises = [];
-    jsonPromises.push(fileHandler.parseJsonPromise('json/rss.json'));
-    jsonPromises.push(fileHandler.parseJsonPromise('json/category.json'));
+      let jsonPromises = [];
+      let savePromises = [];
+      jsonPromises.push(fileHandler.parseJsonPromise('json/rss.json'));
+      jsonPromises.push(fileHandler.parseJsonPromise('json/category.json'));
 
-    Promise.all(jsonPromises).then(returnValues => {
-      let rssArray = returnValues[0];
-      let categoryObj = returnValues[1];
-      initScrape(rssArray, categoryObj);
-    }).catch(error => {
-      console.log(error);
-      scrapeLog(error);
-    });
+      Promise.all(jsonPromises).then(returnValues => {
+        let rssArray = returnValues[0];
+        let categoryObj = returnValues[1];
+        initScrape(rssArray, categoryObj);
+      }).catch(error => {
+        console.log(error);
+        scrapeLog(error);
+      });
+    } else {
+      $scope.scrapeInfo += '\n A scrape is already in progress!';
+      console.log('\n A scrape is already in progress!');
+    }
   };
 
   async function initScrape(rssArray, categoryObj) {

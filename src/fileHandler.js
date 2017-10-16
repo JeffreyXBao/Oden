@@ -3,16 +3,19 @@ var scrape = require('website-scraper');
 var exports = module.exports = {};
 const remote = require('electron').remote;
 const app = remote.app;
-const appPath = app.getAppPath();
-const appDataPath = app.getPath('documents');
+var main = remote.require('./main.js');
+//const appPath = app.getAppPath();
+//uncomment for final dist const docPath = app.getPath('documents');
+const docPath = 'F:/articlesTest';
+console.log(docPath);
 
 exports.parseJson = function(path) {
-  var data = fs.readFileSync(`${appDataPath}/oden/${path}`, 'utf-8');
+  var data = fs.readFileSync(`${docPath}/oden/${path}`, 'utf-8');
   return JSON.parse(data);
 };
 
 exports.parseJsonAsync = function(path, callback) {
-  fs.readFile(`${appDataPath}/oden/${path}`, 'utf-8', (err, data) => {
+  fs.readFile(`${docPath}/oden/${path}`, 'utf-8', (err, data) => {
     if (err) throw err;
     callback(JSON.parse(data));
   });
@@ -20,7 +23,7 @@ exports.parseJsonAsync = function(path, callback) {
 
 exports.parseJsonPromise = function(path) {
   return new Promise(function(resolve, reject) {
-    fs.readFile(`${appDataPath}/oden/${path}`, 'utf-8', (err, data) => {
+    fs.readFile(`${docPath}/oden/${path}`, 'utf-8', (err, data) => {
       if (err) return reject(err);
       resolve(JSON.parse(data));
     });
@@ -28,8 +31,8 @@ exports.parseJsonPromise = function(path) {
 };
 
 exports.writeJson = function(path, input) {
-  console.log(`${appDataPath}/oden/${path}`);
-  fs.writeFileSync(`${appDataPath}/oden/${path}`, input);
+  console.log(`${docPath}/oden/${path}`);
+  fs.writeFileSync(`${docPath}/oden/${path}`, input);
 };
 
 exports.categorizeArticles = function(queueArray, scrapeLog) {
@@ -137,10 +140,11 @@ exports.categorizeArticles = function(queueArray, scrapeLog) {
         scrapeLog("category array didn't match subcategory array, skipping");
       }
     }
-    fs.writeFileSync(`${appDataPath}/oden/json/directory.json`, JSON.stringify(directory));
-    fs.writeFileSync(`${appDataPath}/oden/json/category.json`, JSON.stringify(categoryObj));
+    fs.writeFileSync(`${docPath}/oden/json/directory.json`, JSON.stringify(directory));
+    fs.writeFileSync(`${docPath}/oden/json/category.json`, JSON.stringify(categoryObj));
     Promise.all(savePromiseArray).then(() => {
       console.log('Done!');
+      main.existingScrape = false;
       //scope.scrapeInfo += '\nDone!';
       scrapeLog('done!');
     }).catch(err => {
@@ -170,7 +174,7 @@ exports.categorizeArticles = function(queueArray, scrapeLog) {
   function saveArticlePromiseGenerator(link, saveName) {
     var options = {
       urls: [link],
-      directory: `${appDataPath}/oden/articles/${saveName}/`,
+      directory: `${docPath}/oden/articles/${saveName}/`,
     };
 
     return scrape(options).then(result => {
@@ -180,7 +184,7 @@ exports.categorizeArticles = function(queueArray, scrapeLog) {
   // async function saveArticle(link, saveName) {
   //   var options = {
   //     urls: [link],
-  //     directory: `${appDataPath}/oden/articles/${saveName}/`,
+  //     directory: `${docPath}/oden/articles/${saveName}/`,
   //   };
   //
   //   scrape(options).then(result => {
