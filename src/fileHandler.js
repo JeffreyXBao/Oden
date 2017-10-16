@@ -146,7 +146,7 @@ exports.categorizeArticles = function(queueArray, scrapeLog) {
       console.log('Done!');
       main.existingScrape = false;
       //scope.scrapeInfo += '\nDone!';
-      scrapeLog('done!');
+      scrapeLog('Done!');
     }).catch(err => {
       console.log(err);
     });
@@ -175,6 +175,9 @@ exports.categorizeArticles = function(queueArray, scrapeLog) {
     var options = {
       urls: [link],
       directory: `${docPath}/oden/articles/${saveName}/`,
+      onResourceError: (resource, err) => {
+        console.log(`Resource ${resource} was not saved because of ${err}`);
+      }
     };
 
     return scrape(options).then(result => {

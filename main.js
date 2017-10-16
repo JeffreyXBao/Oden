@@ -78,7 +78,7 @@ exports.openWindow = function(name) {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: false
+      nodeIntegration: false,
       javascript: false
     }
   });

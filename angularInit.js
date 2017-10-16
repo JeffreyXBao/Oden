@@ -209,8 +209,8 @@ app.controller('scrapeCtrl', function($scope, $http) {
       //   let dateString = `${tempDay.getFullYear()}${convertToTwoDigit(tempDay.getMonth() +1)}${convertToTwoDigit(tempDay.getDate())}`;
       // }
     } else {
-      $scope.scrapeInfo += '\n A scrape is already in progress!';
-      console.log('\n A scrape is already in progress!');
+      $scope.scrapeInfo += '\nA scrape is already in progress!';
+      console.log('\nA scrape is already in progress!');
     }
 
   };
@@ -238,8 +238,8 @@ app.controller('scrapeCtrl', function($scope, $http) {
         }
       });
     } else {
-      $scope.scrapeInfo += '\n A scrape is already in progress!';
-      console.log('\n A scrape is already in progress!');
+      $scope.scrapeInfo += '\nA scrape is already in progress!';
+      console.log('\nA scrape is already in progress!');
     }
   };
 
@@ -264,8 +264,8 @@ app.controller('scrapeCtrl', function($scope, $http) {
         scrapeLog(error);
       });
     } else {
-      $scope.scrapeInfo += '\n A scrape is already in progress!';
-      console.log('\n A scrape is already in progress!');
+      $scope.scrapeInfo += '\nA scrape is already in progress!';
+      console.log('\nA scrape is already in progress!');
     }
   };
 
