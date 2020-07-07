@@ -22,6 +22,6 @@
     "website-scraper": "^3.0.0"
   },
   "devDependencies": {
-    "electron": "1.7.9"
+    "electron": "9.1.0"
   }
 }
